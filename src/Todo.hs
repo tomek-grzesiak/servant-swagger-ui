@@ -61,7 +61,7 @@ todoSwagger = toSwagger todoAPI
   & info.title   .~ "Todo API"
   & info.version .~ "1.0"
   & info.description ?~ "This is an API that tests swagger integration"
-  & info.license ?~ ("MIT" & url ?~ URL "http://mit.com")
+  & info.license ?~ ("MIT" & url ?~ URL "http://localhost:8080")
 
 -- | Combined server of a Todo service with Swagger documentation.
 server :: Server API
