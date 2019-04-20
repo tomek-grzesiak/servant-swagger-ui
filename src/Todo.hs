@@ -11,7 +11,7 @@ import           Data.Aeson
 import           Data.Aeson.Encode.Pretty   (encodePretty)
 import qualified Data.ByteString.Lazy.Char8 as BL8
 import           Data.Proxy
-import           Data.Swagger
+import           Data.Swagger hiding (put, get, post)
 import           Data.Text                  (Text)
 import           Data.Time                  (UTCTime (..), fromGregorian)
 import           Data.Typeable              (Typeable)
@@ -29,9 +29,6 @@ type TodoAPI
  :<|> "todo" :> ReqBody '[JSON] Todo :> Post '[JSON] TodoId
  :<|> "todo" :> Capture "id" TodoId :> Get '[JSON] Todo
  :<|> "todo" :> Capture "id" TodoId :> ReqBody '[JSON] Todo :> Put '[JSON] TodoId
-
--- | API for serving @swagger.json@.
-type SwaggerAPI = "swagger.json" :> Get '[JSON] Swagger
 
 -- | Combined API of a Todo service with Swagger documentation.
 --type API = SwaggerAPI :<|> TodoAPI
@@ -68,25 +65,22 @@ todoSwagger = toSwagger todoAPI
 
 -- | Combined server of a Todo service with Swagger documentation.
 server :: Server API
-server = swaggerSchemaUIServer todoSwagger :<|> handler1 :<|> handler2 :<|> handler3 :<|> handler4
+server = swaggerSchemaUIServer todoSwagger 
+  :<|> getAll 
+  :<|> post 
+  :<|> get
+  :<|> put
 
 api = Proxy::Proxy API
 
-handler1 :: Handler [Todo]
-handler1 = return [Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk"]
+getAll :: Handler [Todo]
+getAll = return [Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk"]
 
-handler2 :: Todo -> Handler TodoId
-handler2 x = return $ TodoId 1  
+post :: Todo -> Handler TodoId
+post x = return $ TodoId 1  
 
-handler3 :: TodoId -> Handler Todo
-handler3 x = return (Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk")
+get :: TodoId -> Handler Todo
+get x = return (Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk")
 
-handler4 :: TodoId -> Todo -> Handler TodoId
-handler4 x = undefined
-
-
-
-
--- | Output generated @swagger.json@ file for the @'TodoAPI'@.
-writeSwaggerJSON :: IO ()
-writeSwaggerJSON = BL8.writeFile "example/swagger.json" (encodePretty todoSwagger)
+put :: TodoId -> Todo -> Handler TodoId
+put x y = return $ TodoId 1
