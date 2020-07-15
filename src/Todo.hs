@@ -19,6 +19,7 @@ import           GHC.Generics
 import           Servant
 import           Servant.Swagger
 import           Servant.Swagger.UI
+import           Control.Monad.IO.Class
 
 todoAPI :: Proxy TodoAPI
 todoAPI = Proxy
@@ -74,7 +75,7 @@ server = swaggerSchemaUIServer todoSwagger
 api = Proxy::Proxy API
 
 getAll :: Handler [Todo]
-getAll = return [Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk"]
+getAll =  return [Todo (UTCTime (fromGregorian 2015 12 31) 0) "get milk"]
 
 post :: Todo -> Handler TodoId
 post x = return $ TodoId 1  
