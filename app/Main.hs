@@ -62,9 +62,6 @@ serve p h xs = case route p h xs of
   Nothing -> ioError (userError "404")
   Just m  -> m
 
-
-type instance Server (Get a) = IO a
-
 instance Show a => HasServer (Get a) where
   route :: Proxy (Get a)
         -> IO a -> [String] -> Maybe (IO String)
