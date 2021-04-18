@@ -1,1 +1,10 @@
-cradle: { stack: {}}
+cradle:
+  stack:
+    - path: "./src"
+      component: "server:lib"
+
+    - path: "./app/Main.hs"
+      component: "server:exe:server-exe"
+
+    - path: "./test"
+      component: "server:test:server-test"
